@@ -42,7 +42,6 @@ class InitCompletenessDbSchemaSubscriber implements EventSubscriberInterface
             `locale_id` int(11) NOT NULL,
             `channel_id` int(11) NOT NULL,
             `product_id` int(11) NOT NULL,
-            `ratio` int(11) NOT NULL,
             `missing_count` int(11) NOT NULL,
             `required_count` int(11) NOT NULL,
             PRIMARY KEY (`id`),

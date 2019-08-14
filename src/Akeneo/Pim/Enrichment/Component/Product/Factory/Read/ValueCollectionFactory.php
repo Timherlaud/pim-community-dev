@@ -6,7 +6,8 @@ use Akeneo\Pim\Enrichment\Component\Product\Factory\EmptyValuesCleaner;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\NonExistentValuesFilter\ChainedNonExistentValuesFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\NonExistentValuesFilter\OnGoingFilteredRawValues;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\TransformRawValuesCollections;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ReadValueCollection;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
+use Akeneo\Pim\Structure\Component\Query\PublicApi\AttributeType\Attribute;
 use Akeneo\Pim\Structure\Component\Query\PublicApi\AttributeType\GetAttributes;
 
 /**
@@ -14,10 +15,10 @@ use Akeneo\Pim\Structure\Component\Query\PublicApi\AttributeType\GetAttributes;
  * @copyright 2019 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class ValueCollectionFactory
+abstract class ValueCollectionFactory
 {
     /** @var ValueFactory */
-    private $valueFactory;
+    protected $valueFactory;
 
     /** @var GetAttributes */
     private $getAttributeByCodes;
@@ -45,13 +46,6 @@ class ValueCollectionFactory
         $this->transformRawValuesCollections = $transformRawValuesCollections;
     }
 
-    public function createFromStorageFormat(array $rawValues): ReadValueCollection
-    {
-        $notUsedIdentifier = 'not_used_identifier';
-
-        return $this->createMultipleFromStorageFormat([$notUsedIdentifier => $rawValues])[$notUsedIdentifier];
-    }
-
     public function createMultipleFromStorageFormat(array $rawValueCollections): array
     {
         $rawValueCollectionsIndexedByType = $this->transformRawValuesCollections->toValueCollectionsIndexedByType($rawValueCollections);
@@ -59,7 +53,7 @@ class ValueCollectionFactory
 
         if (empty($rawValueCollectionsIndexedByType)) {
             foreach (array_keys($rawValueCollections) as $identifier) {
-                $valueCollections[$identifier] = new ReadValueCollection([]);
+                $valueCollections[$identifier] = $this->createCollection([]);
             }
 
             return $valueCollections;
@@ -78,7 +72,7 @@ class ValueCollectionFactory
         $identifiersWithOnlyUnknownAttributes = array_diff(array_keys($rawValueCollections), array_keys($valueCollections));
 
         foreach ($identifiersWithOnlyUnknownAttributes as $identifier) {
-            $valueCollections[$identifier] = new ReadValueCollection([]);
+            $valueCollections[$identifier] = $this->createCollection([]);
         }
 
         return $valueCollections;
@@ -120,14 +114,19 @@ class ValueCollectionFactory
                             $localeCode = null;
                         }
 
-                        $values[] = $this->valueFactory->createWithoutCheckingData($attribute, $channelCode, $localeCode, $data);
+                        // TODO : CATCH EXCEPTIONS
+                        $values[] = $this->createData($attribute, $channelCode, $localeCode, $data);
                     }
                 }
             }
 
-            $entities[$productIdentifier] = new ReadValueCollection($values);
+            $entities[$productIdentifier] = $this->createCollection($values);
         }
 
         return $entities;
     }
+
+    abstract protected function createData(Attribute $attribute, ?string $channelCode, ?string $localeCode, $data): ValueInterface;
+
+    abstract protected function createCollection(array $values);
 }

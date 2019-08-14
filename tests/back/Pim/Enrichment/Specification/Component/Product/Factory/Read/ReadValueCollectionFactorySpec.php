@@ -12,7 +12,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\Value\NumberValueFactor
 use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\Value\OptionValueFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\Value\TextAreaValueFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\Value\TextValueFactory;
-use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\ValueCollectionFactory;
+use Akeneo\Pim\Enrichment\Component\Product\Factory\Read\ReadValueCollectionFactory;
 use Akeneo\Pim\Enrichment\Component\Product\Factory\TransformRawValuesCollections;
 use Akeneo\Pim\Enrichment\Component\Product\Value\OptionValue;
 use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
@@ -22,7 +22,7 @@ use Akeneo\Pim\Structure\Component\Query\PublicApi\AttributeType\GetAttributes;
 use PhpSpec\ObjectBehavior;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ReadValueCollection;
 
-class ValueCollectionFactorySpec extends ObjectBehavior
+class ReadValueCollectionFactorySpec extends ObjectBehavior
 {
     function let(
         GetAttributes $getAttributeByCodes,
@@ -51,7 +51,7 @@ class ValueCollectionFactorySpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(ValueCollectionFactory::class);
+        $this->shouldHaveType(ReadValueCollectionFactory::class);
     }
 
     function it_creates_a_values_collection_from_the_storage_format_from_single(

@@ -65,8 +65,6 @@ services:
         class: Akeneo\Pim\Enrichment\Component\Product\Factory\Read\ReadValueFactory
         arguments:
             $readValueFactories: !tagged akeneo.pim.enrichment.factory.read.product_value
-            $writeValueFactory: '@pim_catalog.factory.value'
-            $attributeRepository: '@pim_catalog.repository.cached_attribute'
 
     akeneo.pim.enrichment.factory.read.value_collection:
         class: Akeneo\Pim\Enrichment\Component\Product\Factory\Read\ValueCollectionFactory

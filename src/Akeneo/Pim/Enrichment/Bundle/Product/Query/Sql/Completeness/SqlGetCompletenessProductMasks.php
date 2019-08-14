@@ -111,6 +111,9 @@ SQL;
     {
         $masks = [];
         foreach ($rawValues as $attributeCode => $valuesByChannel) {
+            if (!isset($attributes[$attributeCode])) {
+                continue;
+            }
             $attributeType = $attributes[$attributeCode]->type();
             foreach ($valuesByChannel as $channelCode => $valuesByLocale) {
                 foreach ($valuesByLocale as $localeCode => $value) {
